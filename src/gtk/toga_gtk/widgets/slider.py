@@ -1,6 +1,7 @@
 from gi.repository import Gtk
 
 from .base import Widget
+from travertino.size import at_least
 
 
 class Slider(Widget):
@@ -32,23 +33,8 @@ class Slider(Widget):
         self.adj.set_upper(range[1])
 
     def rehint(self):
-        hints = {}
         width = self.native.get_preferred_width()
-        minimum_width = 160
-        natural_width = width[1]
-
         height = self.native.get_preferred_height()
-        minimum_height = height[0]
-        natural_height = height[1]
 
-        if minimum_width > 0:
-            hints['min_width'] = minimum_width
-        if minimum_height > 0:
-            hints['min_height'] = minimum_height
-        if natural_width > 0:
-            hints['width'] = natural_width
-        if natural_height > 0:
-            hints['height'] = natural_height
-
-        if hints:
-            self.interface.style.hint(**hints)
+        self.interface.intrinsic.width = at_least(max(self.interface.MIN_WIDTH, width[0]))
+        self.interface.intrinsic.height = height[1]
